@@ -86,7 +86,7 @@ if __name__ == "__main__":
         name, location, price, distance = result['name'], result['location'], result['price'], result['distance']
 
 
-        #sql_query = "INSERT INTO booking_data (name, location, price) VALUES (?, ?, ?);"
-        #cursor.execute(sql_query, (name, location, price))
+        sql_query = "INSERT INTO booking_data (name, location, price) VALUES (?, ?, ?);"
+        cursor.execute(sql_query, (name, location, price))
         connection.commit()
     connection.close()
