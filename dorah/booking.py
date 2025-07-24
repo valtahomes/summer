@@ -40,8 +40,12 @@ def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
         with open("page.html", "w") as text_file:
             text_file.write(content)
         soup = BeautifulSoup(content, "html.parser")
-        listings = soup.select("div[data-testid='property-card']")[:max_results]
+        #page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+        #time.sleep(5)
+
+        listings = soup.select("div[data-testid='property-card']")#[:max_results]
         print(f"number of listings found: {len(listings)}")
+        input("")
 
         for listing in listings:
             name = listing.select_one("div[data-testid='title']").get_text(strip=True)
@@ -86,7 +90,7 @@ if __name__ == "__main__":
         name, location, price, distance = result['name'], result['location'], result['price'], result['distance']
 
 
-        sql_query = "INSERT INTO booking_data (name, location, price) VALUES (?, ?, ?);"
-        cursor.execute(sql_query, (name, location, price))
+        #sql_query = "INSERT INTO booking_data (name, location, price) VALUES (?, ?, ?);"
+        #cursor.execute(sql_query, (name, location, price))
         connection.commit()
     connection.close()
