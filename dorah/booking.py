@@ -133,7 +133,7 @@ if __name__ == "__main__":
 
 
         # UNCOMMENT BELOW TO ADD TO SQLITE3 DATABASE
-        #sql_query = "INSERT INTO booking_data (name, location, price) VALUES (?, ?, ?);"
-        #cursor.execute(sql_query, (name, location, price))
+        sql_query = "INSERT INTO booking_data (name, location, price, distance) VALUES (?, ?, ?, ?);"
+        cursor.execute(sql_query, (name, location, price, distance))
         connection.commit()
     connection.close()
