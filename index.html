@@ -1,17 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Welcome to the Private Scraping Portal</title>
   <style>
+    .page-title {
+      text-align: center;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 40px;
+    }
+    #link {
+      display: block;
+      margin: 0 auto;
+      width: 300px;
+      font-size: 16px;
+    }
+
+    label {
+      display: block;
+      text-align: center;
+      margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>Welcome! Input information below to start scraping</h1>
+    <h1 class="page-title">What Property Do You Want to Compare?</h1>
   </header>
   <main>
-    <label for="link">Link (or other info, potentially) </label>
-    <input type="text" id="link" name="link">
+    <label for="link">Address</label>
+    <input type="text" id="link" name="link" size="40">
   </main>
 </body>
 </html>
