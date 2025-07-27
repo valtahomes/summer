@@ -48,26 +48,16 @@ def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
             price = price_el[0].get_text(strip=True) if price_el and len(price_el) > 0 else "N/A"
             total_cost = price_el[1].get_text(strip=True) if price_el and len(price_el) > 1 else "N/A"
             location = listing.select_one("span[data-testid='address']").get_text(strip=True)
+            ratings = listing.select_one("div[aria-hidden='true']").get_text(strip=True)
             results.append({
                 "name": name,
                 "price": price,
                 "total_cost": total_cost,
-                "location": location
+                "location": location,
+                "ratings": ratings
             })
 
         input("")
         browser.close()
 
     return results
-
-#location_input = "1400+Hubbell+Pl%2C+Seattle%2C+WA+98101%2C+USA"
-location_input = "1400 Hubbell Pl, Seattle, WA 98101, USA"
-
-# Example usage
-if __name__ == "__main__":
-    location = location_input.replace(" ", "+").replace(",", "2C")
-    checkin = "2025-07-29"
-    checkout = "2025-07-30"
-    results = scrape_booking(location, checkin, checkout)
-    for i, result in enumerate(results, 1):
-        print(f"{i}. {result['name']}, {result['location']}, {result['price']}/{result['total_cost']}")
