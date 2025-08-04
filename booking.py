@@ -1,6 +1,10 @@
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 import time
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
+@app.route('/', methods=['GET', 'POST'])
 
 def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
     # url = (
@@ -9,6 +13,10 @@ def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
     #     f"&checkout_year_month_monthday={checkout}"
     #     "&group_adults=2&no_rooms=1&group_children=0"
     # )
+    if request.method == 'POST':
+        address = request.form['address']
+        checkin = request.form['checkindate']
+        checkout = request.form['checkoutdate']
 
     url = (
          f"https://www.booking.com/searchresults.html"
