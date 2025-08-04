@@ -7,26 +7,12 @@
       font-family: "Times New Roman", Times, serif;
       font-size: 40px;
     }
-    #address {
+    input[type="text"], input[type="date"] {
       display: block;
-      margin: 0 auto;
+      margin: 0 auto 15px;
       width: 300px;
       font-size: 16px;
     }
-    #checkindate {
-      display: block;
-      margin: 0 auto;
-      width: 300px;
-      font-size: 16px;
-    }
-    #checkoutdate {
-      display: block;
-      margin: 0 auto;
-      width: 300px;
-      font-size: 16px;
-    }
-
-
     label {
       display: block;
       text-align: center;
@@ -43,21 +29,18 @@
     <h1 class="page-title">What Property Do You Want to Compare?</h1>
   </header>
   <main>
-    <p style="text-align: center">To use, enter address and date in shown manner exactly; For address: Unit number street number, city, state zipcode, USA<br>Example address: 1400 Hubbell Pl, Seattle, WA 98101, USA <br> Example check-in date: 2025-07-29 <br> Exmple check-out date: 2025-07-30</p>
-    <label for="address">Address</label>
-    <input type="text" id="address" name="address" size="40">
-    <label for="checkindate">Check-in Date</label>
-    <input type="text" id="checkindate" name="checkindate" size="40">
-    <label for="checkoutdate">Checkout Date</label>
-    <input type="text" id="checkoutdate" name="checkoutdate" size="40">
-    <button onclick="processInput()">Submit</button>
-    <script>
-      function processInputs() {
-        const address = document.getElementById('address').value;
-        const checkindate = document.getElementById('checkindate').value;
-        const checkoutdate = document.getElementById('checkoutdate').value;
-      }
-  </script>
+    <form method="POST">
+      <label for="address">Address</label>
+      <input type="text" id="address" name="address">
+
+      <label for="checkindate">Check-in Date</label>
+      <input type="date" id="checkindate" name="checkindate">
+
+      <label for="checkoutdate">Checkout Date</label>
+      <input type="date" id="checkoutdate" name="checkoutdate">
+
+      <button type="submit">Submit</button>
+    </form>
   </main>
 </body>
 </html>
