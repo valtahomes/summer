@@ -2,6 +2,8 @@ from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 import time
 import sqlite3
+from word2number import w2n
+
 
 # scrolls to the bottom of the page to load more properties
 def scroll(page, scroll_pause_time=2, max_scroll_attempts=10):
@@ -48,6 +50,9 @@ def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
         print(f"Loading {url}")
         page.goto(url, timeout=60000)
 
+
+
+        input()
         # time.sleep(2)  # wait for JS rendering
         # page.get_by_role("button", name="Search").click()
         # time.sleep(5)  # wait for JS rendering
@@ -64,7 +69,7 @@ def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
 
                 
                 button = page.locator('button.de576f5064.b46cd7aad7.d0a01e3d83.dda427e6b5.bbf83acb81.a0ddd706cc')
-                button.wait_for(state="visible", timeout=5000)
+                button.wait_for(state="visible", timeout=2000)
                 if not button.is_enabled():
                     break
                 
@@ -93,16 +98,65 @@ def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
         for listing in listings:
             name = listing.select_one("div[data-testid='title']").get_text(strip=True)
             price_el = listing.select("span[data-testid='price-and-discounted-price']")
-            price = price_el[0].get_text(strip=True) if price_el and len(price_el) > 0 else "N/A"
-            total_cost = price_el[1].get_text(strip=True) if price_el and len(price_el) > 1 else "N/A"
+            price = price_el[0].get_text(strip=True).replace("$", "") if price_el and len(price_el) > 0 else "N/A"
+            total_cost = price_el[1].get_text(strip=True).replace("$", "") if price_el and len(price_el) > 1 else "N/A"
             location = listing.select_one("span[data-testid='address']").get_text(strip=True)
-            distance = listing.select_one("span[data-testid='distance']").get_text(strip=True).removesuffix(" from your search address")
+            distance = listing.select_one("span[data-testid='distance']").get_text(strip=True).removesuffix(" from your search address").removesuffix(" miles from map center")
+
             results.append({
                 "name": name,
                 "price": price,
                 "total_cost": total_cost,
                 "location": location,
-                "distance": distance
+                "distance": distance,
+
+            })
+
+        for idx, listing in enumerate(listings):
+
+            #page.locator('title-link').click()
+            #page.locator('button.de576f5064.b46cd7aad7.d0a01e3d83.dda427e6b5.bbf83acb81.a0ddd706cc').click
+            
+            link = listing.select_one("a[data-testid='title-link']").get('href')
+            print(link)
+            page.goto(link, timeout=60000)
+
+
+            rating = page.locator("div[aria-hidden='true']").nth(1).inner_text()
+
+            rooms = page.locator("a[rel='main']").nth(0).inner_text()
+            room_list = rooms.split()
+            if any("-Bedroom" in item for item in room_list):
+                blank_bedrooms = [item for item in room_list if "-Bedroom" in item]
+                number_rooms = str(blank_bedrooms[0])
+                number_rooms = number_rooms.removesuffix("-Bedroom")
+                number_rooms = w2n.word_to_num(number_rooms)
+            if "Bedroom" in room_list:
+                if room_list.index("Bedroom") >= 1:
+                    number_rooms = room_list[room_list.index("Bedroom")-1]
+                number_rooms = w2n.word_to_num(number_rooms)
+
+            else:
+                number_rooms = "1"
+
+            amenities = page.locator("div[data-testid='property-most-popular-facilities-wrapper']").locator('.f6b6d2a959').all()
+            amenity_list = []
+            #input()
+            for amenity in amenities:
+                amenity = amenity.inner_text()
+                if amenity not in amenity_list:
+                    amenity_list.append(amenity)
+            amenity_list_str = ""
+            for i in amenity_list:
+                amenity_list_str = amenity_list_str + i + ", "
+            amenity_list_str = amenity_list_str.removesuffix(", ")
+            print(amenity_list_str)
+
+            results[idx].update({
+                "link": link,
+                "rating": rating,
+                "number_rooms": number_rooms,
+                "amenities": amenity_list_str
             })
 
         #input("")
@@ -124,16 +178,18 @@ location_input = "1400 Hubbell Pl, Seattle, WA 98101, USA"
 
 if __name__ == "__main__":
     location = location_input.replace(" ", "+").replace(",", "2C")
-    checkin = "2025-07-29"
-    checkout = "2025-07-30"
+    checkin = "2025-08-10"
+    checkout = "2025-08-11"
     results = scrape_booking(location, checkin, checkout)
     for i, result in enumerate(results, 1):
-        print(f"{i}. {result['name']}, {result['location']}, {result['price']}/{result['total_cost']}, {result['distance']}")
-        name, location, price, distance = result['name'], result['location'], result['price'], result['distance']
+        #print(f"{i}. {result['name']}, {result['location']}, {result['price']}/{result['total_cost']}, {result['distance']}")
+        name, location, price, distance = result['name'], result['location'], result['total_cost'], result['distance']
+
+        link, rating, number_rooms, amenities = result['link'], result['rating'], result['number_rooms'], result['amenities']
 
 
         # UNCOMMENT BELOW TO ADD TO SQLITE3 DATABASE
-        sql_query = "INSERT INTO booking_data (name, location, price, distance) VALUES (?, ?, ?, ?);"
-        cursor.execute(sql_query, (name, location, price, distance))
+        sql_query = "INSERT INTO booking_data (name, location, price, distance, link, rating, number_of_rooms, amenities) VALUES (?, ?, ?, ?, ?, ?, ?, ?);"
+        cursor.execute(sql_query, (name, location, price, distance, link, rating, number_rooms, amenities))
         connection.commit()
     connection.close()
