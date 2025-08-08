@@ -50,6 +50,9 @@ def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
         print(f"Loading {url}")
         page.goto(url, timeout=60000)
 
+
+
+        input()
         # time.sleep(2)  # wait for JS rendering
         # page.get_by_role("button", name="Search").click()
         # time.sleep(5)  # wait for JS rendering
@@ -95,10 +98,10 @@ def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
         for listing in listings:
             name = listing.select_one("div[data-testid='title']").get_text(strip=True)
             price_el = listing.select("span[data-testid='price-and-discounted-price']")
-            price = price_el[0].get_text(strip=True) if price_el and len(price_el) > 0 else "N/A"
-            total_cost = price_el[1].get_text(strip=True) if price_el and len(price_el) > 1 else "N/A"
+            price = price_el[0].get_text(strip=True).replace("$", "") if price_el and len(price_el) > 0 else "N/A"
+            total_cost = price_el[1].get_text(strip=True).replace("$", "") if price_el and len(price_el) > 1 else "N/A"
             location = listing.select_one("span[data-testid='address']").get_text(strip=True)
-            distance = listing.select_one("span[data-testid='distance']").get_text(strip=True).removesuffix(" from your search address")
+            distance = listing.select_one("span[data-testid='distance']").get_text(strip=True).removesuffix(" from your search address").removesuffix(" miles from map center")
 
             results.append({
                 "name": name,
@@ -175,8 +178,8 @@ location_input = "1400 Hubbell Pl, Seattle, WA 98101, USA"
 
 if __name__ == "__main__":
     location = location_input.replace(" ", "+").replace(",", "2C")
-    checkin = "2025-08-06"
-    checkout = "2025-08-07"
+    checkin = "2025-08-10"
+    checkout = "2025-08-11"
     results = scrape_booking(location, checkin, checkout)
     for i, result in enumerate(results, 1):
         #print(f"{i}. {result['name']}, {result['location']}, {result['price']}/{result['total_cost']}, {result['distance']}")
