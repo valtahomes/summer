@@ -29,17 +29,19 @@ def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
     #     "&group_adults=2&no_rooms=1&group_children=0"
     # )
 
-    url = (
-         f"https://www.booking.com/searchresults.html"
-         f"?ss={location}"
-         f"&label=gen173nr-1FCAEoggI46AdIM1gEaLQCiAEBmAExuAEHyAEM2AEB6AEB-AECiAIBqAIDuAKUo9vDBsACAdICJDVmMWZkMzBiLWU3N2QtNDUxYS1iMmU3LTU4YTc2OTUwZjYzONgCBeACAQ&sid=33469a4d9e60896eff638e1a36ece6f1&aid=304142"
-         f"&lang=en-us&src=searchresults"
-         f"&checkin={checkin}&checkout={checkout}"
-         f"&group_adults=4&no_rooms=1&group_children=0"
-         f"&nflt=distance%3D3220"
-     )
+    #url = (
+    #     f"https://www.booking.com/searchresults.html"
+    #     f"?ss={location}"
+    #     f"&label=gen173nr-1FCAEoggI46AdIM1gEaLQCiAEBmAExuAEHyAEM2AEB6AEB-AECiAIBqAIDuAKUo9vDBsACAdICJDVmMWZkMzBiLWU3N2QtNDUxYS1iMmU3LTU4YTc2OTUwZjYzONgCBeACAQ&sid=33469a4d9e60896eff638e1a36ece6f1&aid=304142"
+    #     f"&lang=en-us&src=searchresults"
+    #     f"&checkin={checkin}&checkout={checkout}"
+    #     f"&group_adults=4&no_rooms=1&group_children=0"
+    #     f"&nflt=distance%3D3220"
+    # )
 
     #url = "https://www.booking.com/searchresults.html?ss=1400+Hubbell+Pl%2C+Seattle%2C+WA+98101%2C+USA&ssne=Seattle&ssne_untouched=Seattle&efdco=1&label=gen173nr-1FCAEoggI46AdIM1gEaLQCiAEBmAExuAEHyAEM2AEB6AEB-AECiAIBqAIDuAKUo9vDBsACAdICJDVmMWZkMzBiLWU3N2QtNDUxYS1iMmU3LTU4YTc2OTUwZjYzONgCBeACAQ&sid=33469a4d9e60896eff638e1a36ece6f1&aid=304142&lang=en-us&sb=1&src_elem=sb&src=searchresults&dest_id=ChIJexvEfrVqkFQRLB2i_7xmQJw&dest_type=latlong&latitude=47.6121355&longitude=-122.32980540000001&ac_position=0&ac_click_type=g&ac_langcode=xu&ac_suggestion_list_length=2&search_selected=true&search_pageview_id=cec78226a9e39bb48ca57fd734e77823&ac_meta=KAIyAnh1WgdnZW9jb2Rl&checkin=2025-07-19&checkout=2025-07-20&group_adults=4&no_rooms=1&group_children=0"
+    
+    url = "https://www.booking.com"
 
     results = []
     
@@ -51,9 +53,18 @@ def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
         page.goto(url, timeout=60000)
 
 
+        page.locator("input[name='ss']").fill(location)
+        page.locator("button[data-testid='searchbox-dates-container']").click()
 
-        input()
-        # time.sleep(2)  # wait for JS rendering
+        #checkin and checkout dates
+        page.locator(f"span[data-date='{checkin}']").click()
+        page.locator(f"span[data-date='{checkout}']").click()
+
+        time.sleep(0.5)
+        page.locator("button[type='submit']").click()
+
+        
+        time.sleep(2)  # wait for JS rendering
         # page.get_by_role("button", name="Search").click()
         # time.sleep(5)  # wait for JS rendering
 
@@ -66,7 +77,6 @@ def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
         while True:
             try:
                 scroll(page)
-
                 
                 button = page.locator('button.de576f5064.b46cd7aad7.d0a01e3d83.dda427e6b5.bbf83acb81.a0ddd706cc')
                 button.wait_for(state="visible", timeout=2000)
@@ -80,7 +90,7 @@ def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
         
         scroll(page)
 
-
+        input()
         #LOAD PAGE
         content = page.content()
         # save to local file
@@ -174,12 +184,17 @@ cursor = connection.cursor()
 #price INTEGER);"""
 #cursor.execute(sql_command)
 #location_input = "1400+Hubbell+Pl%2C+Seattle%2C+WA+98101%2C+USA"
-location_input = "1400 Hubbell Pl, Seattle, WA 98101, USA"
+
+
+#INPUT INFORMATION
+location = "1400 Hubbell Pl, Seattle, WA 98101, USA"
+checkin = "2025-08-12"
+checkout = "2025-08-13"
+
 
 if __name__ == "__main__":
-    location = location_input.replace(" ", "+").replace(",", "2C")
-    checkin = "2025-08-10"
-    checkout = "2025-08-11"
+    #location = location_input.replace(" ", "+").replace(",", "2C")
+    
     results = scrape_booking(location, checkin, checkout)
     for i, result in enumerate(results, 1):
         #print(f"{i}. {result['name']}, {result['location']}, {result['price']}/{result['total_cost']}, {result['distance']}")
