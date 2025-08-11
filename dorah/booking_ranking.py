@@ -6,7 +6,7 @@ import re
 
 conn = sqlite3.connect('booking_database.db')
 cursor = conn.cursor()
-cursor.execute("SELECT name, location, price, distance, rating, number_of_rooms FROM booking_data")
+cursor.execute("SELECT name, location, price, distance, rating, number_of_rooms, amenities FROM booking_data")
 data = cursor.fetchall()
 #print(data)
 
