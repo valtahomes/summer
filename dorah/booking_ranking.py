@@ -41,13 +41,14 @@ og_property = {
     'price': [200],
     'distance': [0],
     'rating': [8],
-    'number_of_rooms': [2]
+    'number_of_rooms': [2],
+    'amenities': ['Free WiFi, Breakfast included, Swimming pool']
     }
 new_row = pd.DataFrame(og_property)
 df = pd.concat([new_row, df]).reset_index(drop=True)
 
 # Run Gower distance
-gower.gower_matrix(df, cat_features=[True, True, False, False, False, False])
+gower.gower_matrix(df, cat_features=[True, True, False, False, False, False, True])
 
 gower_topn_index = gower.gower_topn(df.iloc[0:1,:], df.iloc[:,], n=11)['index']
 
