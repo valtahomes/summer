@@ -6,6 +6,15 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 
+def home():
+    results = []
+    if request.method == 'POST':
+        address = request.form['address']
+        checkin = request.form['checkindate']
+        checkout = request.form['checkoutdate']
+        results = scrape_booking(address, checkin, checkout, max_results=10)
+    return render_template('index.html', results=results)
+
 def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
     # url = (
     #     f"https://www.booking.com/searchresults.html"
@@ -13,10 +22,6 @@ def scrape_booking(location: str, checkin: str, checkout: str, max_results=10):
     #     f"&checkout_year_month_monthday={checkout}"
     #     "&group_adults=2&no_rooms=1&group_children=0"
     # )
-    if request.method == 'POST':
-        address = request.form['address']
-        checkin = request.form['checkindate']
-        checkout = request.form['checkoutdate']
 
     url = (
          f"https://www.booking.com/searchresults.html"
