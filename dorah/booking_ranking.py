@@ -26,7 +26,7 @@ conn.close()
 #print(numpy_array)
 
 # Convert to DataFrame
-df = pd.DataFrame(data, columns=["name", "location", "price", "distance", "rating", "number_of_rooms"])
+df = pd.DataFrame(data, columns=["name", "location", "price", "distance", "rating", "number_of_rooms", "amenities"])
 
 # Clean numeric fields
 df['distance'] = df['distance'].apply(lambda x: float(re.sub(r'[^\d.]', '', str(x))))
