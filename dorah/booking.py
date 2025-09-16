@@ -188,8 +188,8 @@ cursor = connection.cursor()
 
 #INPUT INFORMATION
 location = "1400 Hubbell Pl, Seattle, WA 98101, USA"
-checkin = "2025-08-12"
-checkout = "2025-08-13"
+checkin = "2025-09-20"
+checkout = "2025-09-21"
 
 
 if __name__ == "__main__":
