@@ -4,7 +4,14 @@ import time
 import sqlite3
 from word2number import w2n
 
-
+def home():
+    results = []
+    if request.method == 'POST':
+        address = request.form['address']
+        checkin = request.form['checkindate']
+        checkout = request.form['checkoutdate']
+        results = scrape_booking(address, checkin, checkout, max_results=10)
+    return render_template('index.html', results=results)
 # scrolls to the bottom of the page to load more properties
 def scroll(page, scroll_pause_time=2, max_scroll_attempts=10):
 
@@ -187,9 +194,9 @@ cursor = connection.cursor()
 
 
 #INPUT INFORMATION
-location = "1400 Hubbell Pl, Seattle, WA 98101, USA"
-checkin = "2025-09-20"
-checkout = "2025-09-21"
+#location = "1400 Hubbell Pl, Seattle, WA 98101, USA"
+#checkin = "2025-09-20"
+#checkout = "2025-09-21"
 
 
 if __name__ == "__main__":
