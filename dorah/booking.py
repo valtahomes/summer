@@ -6,6 +6,7 @@ from word2number import w2n
 from flask import Flask, request, render_template
 app = Flask(__name__)
 
+@app.route("/", methods=["GET", "POST"])
 def home():
     results = []
     if request.method == 'POST':
