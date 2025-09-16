@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import time
 import sqlite3
 from word2number import w2n
+from flask import Flask, request, render_template
+app = Flask(__name__)
 
 def home():
     results = []
