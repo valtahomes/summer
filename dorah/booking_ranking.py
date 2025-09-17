@@ -44,6 +44,7 @@ og_property = {
     'rating': [8],
     'number_of_rooms': [2],
     'amenities': ["good breakfast, wifi, free parking"]
+
     }
 new_row = pd.DataFrame(og_property)
 df = pd.concat([new_row, df]).reset_index(drop=True)
@@ -55,7 +56,9 @@ address_column = df['location']
 df = df.drop(columns=['location'])
 
 # Run Gower distance
+
 gower.gower_matrix(df, cat_features=[True, False, False, False, True])
+
 
 gower_topn_index = gower.gower_topn(df.iloc[0:1,:], df.iloc[:,], n=11)['index']
 
