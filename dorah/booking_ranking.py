@@ -11,6 +11,7 @@ data = cursor.fetchall()
 #print(data)
 
 
+
 conn.close()
 
 #numpy_array = np.array(data)
@@ -42,17 +43,31 @@ og_property = {
     'distance': [0],
     'rating': [8],
     'number_of_rooms': [2],
-    'amenities': ['Free WiFi, Breakfast included, Swimming pool']
+    'amenities': ["good breakfast, wifi, free parking"]
+
     }
 new_row = pd.DataFrame(og_property)
 df = pd.concat([new_row, df]).reset_index(drop=True)
 
+price_column = df['price']
+df = df.drop(columns=['price'])
+
+address_column = df['location']
+df = df.drop(columns=['location'])
+
 # Run Gower distance
-gower.gower_matrix(df, cat_features=[True, True, False, False, False, False, True])
+
+gower.gower_matrix(df, cat_features=[True, False, False, False, True])
+
 
 gower_topn_index = gower.gower_topn(df.iloc[0:1,:], df.iloc[:,], n=11)['index']
 
+#df['price'] = price_column
+#df['address'] = address_column
+df.insert(1, 'price', price_column)
+df.insert(2, 'address', address_column)
+
 pd.set_option('display.max_columns', None) 
-pd.set_option('display.width', 1000)             # Set max line width for wrapping (adjust as needed)
+#pd.set_option('display.width', 1000)             # Set max line width for wrapping (adjust as needed)
 #pd.set_option('display.max_colwidth', None)  
 print(df.iloc[gower_topn_index])
