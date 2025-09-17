@@ -42,6 +42,31 @@
 
       <button type="submit">Submit</button>
     </form>
+    {% if results %}
+      <h2 style="text-align:center">Results</h2>
+      <table border="1" style="margin:auto;">
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Location</th>
+          <th>Distance</th>
+          <th>Rating</th>
+          <th>Rooms</th>
+          <th>Amenities</th>
+        </tr>
+      {% for r in results %}
+        <tr>
+          <td><a href="{{ r.link }}" target="_blank">{{ r.name }}</a></td>
+          <td>{{ r.total_cost }}</td>
+          <td>{{ r.location }}</td>
+          <td>{{ r.distance }}</td>
+          <td>{{ r.rating }}</td>
+          <td>{{ r.number_rooms }}</td>
+          <td>{{ r.amenities }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+{% endif %}
   </main>
 </body>
 </html>
