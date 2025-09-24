@@ -15,6 +15,19 @@ from bs4 import BeautifulSoup
 import time
 import sqlite3
 from word2number import w2n
+from flask import Flask, request, render_template
+app = Flask(__name__)
+
+# 
+@app.route("/index", methods=["GET", "POST"])
+def home():
+    results = []
+    if request.method == 'POST':
+        address = request.form['address']
+        checkin = request.form['checkindate']
+        checkout = request.form['checkoutdate']
+        results = scrape_booking(address, checkin, checkout, max_results=10)
+    return render_template('index.html', results=results)
 
 
 # INPUT INFORMATION
