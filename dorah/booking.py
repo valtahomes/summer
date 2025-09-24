@@ -1,10 +1,12 @@
-# Booking.com web scraper
+# BOOKING.PY
+# booking.com web scraper
 # -----
 # scrapes data from every relevant property within a 2-mile radius of an input location
 # input is address and checkin/checkout dates
 # collects name, address, price, distance from input address, link, rating, number of rooms, and amenity list
 # saves data in a sqlite3 database
 # works as of 9/24/25
+# -----
 
 
 # import libraries

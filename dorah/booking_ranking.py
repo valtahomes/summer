@@ -1,3 +1,5 @@
+# BOOKING_RANKING.PY
+# -----
 # ranks properties in database using gower matrix
 # ranks based on address, distance, rating, number of rooms, amenities
 # prints ten most similar properties to inputted property
