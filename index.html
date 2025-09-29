@@ -54,7 +54,7 @@
           <th>Rooms</th>
           <th>Amenities</th>
         </tr>
-      {% for r in results %}
+        {% for r in results %}
         <tr>
           <td><a href="{{ r.link }}" target="_blank">{{ r.name }}</a></td>
           <td>{{ r.total_cost }}</td>
@@ -64,9 +64,9 @@
           <td>{{ r.number_rooms }}</td>
           <td>{{ r.amenities }}</td>
         </tr>
-      {% endfor %}
-    </table>
-{% endif %}
+        {% endfor %}
+      </table>
+    {% endif %}
   </main>
 </body>
 </html>
