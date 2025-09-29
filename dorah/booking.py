@@ -28,6 +28,8 @@ def home():
         checkout = request.form['checkoutdate']
         results = scrape_booking(address, checkin, checkout, max_results=10)
     return render_template('index.html', results=results)
+if __name__ == "__main__":
+    app.run(debug=True)
 
 
 # INPUT INFORMATION
