@@ -23,7 +23,7 @@ app = Flask(__name__)
 def home():
     results = []
     if request.method == 'POST':
-        address = request.form['address']
+        location = request.form['address']
         checkin = request.form['checkindate']
         checkout = request.form['checkoutdate']
         results = scrape_booking(address, checkin, checkout, max_results=10)
@@ -33,9 +33,10 @@ if __name__ == "__main__":
 
 
 # INPUT INFORMATION
-location = "1400 Hubbell Pl, Seattle, WA 98101, USA"
-checkin = "2025-09-20"
-checkout = "2025-09-21"
+#location = "1400 Hubbell Pl, Seattle, WA 98101, USA"
+#checkin = "2025-09-20"
+
+#checkout = "2025-09-21"
 
 
 # SCROLL FUNCTION
